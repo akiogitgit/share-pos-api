@@ -8,7 +8,7 @@
 if Rails.env == "development"
 
   # 投稿作成
-  (1..5).each do |i|
+  (1..2).each do |i|
     User.create(
       username: "testuser#{i}",
       nickname: "あきお#{i}",
@@ -24,7 +24,7 @@ if Rails.env == "development"
       url: "https://tlms.tsc.u-tokai.ac.jp/course/view.php?id=63304&section=#{i}",
       published: i % 2 == 0,
       evaluation: (i % 5) + 1,
-      user_id: (i % 5) + 1,
+      user_id: (i % 2) + 1,
     )
   end
 end
