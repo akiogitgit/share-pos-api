@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_06_13_055628) do
+ActiveRecord::Schema[7.0].define(version: 2022_06_18_070536) do
   create_table "posts", force: :cascade do |t|
     t.string "comment"
     t.string "url", null: false
@@ -28,6 +28,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_13_055628) do
     t.string "password_digest", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "token"
+    t.index ["token"], name: "index_users_on_token", unique: true
   end
 
   add_foreign_key "posts", "users"
