@@ -2,10 +2,7 @@ class SessionsController < ApplicationController
   def login
     user = User.find_by(username: params[:session][:username])
     if user&.authenticate(params[:session][:password])
-    # user = User.find_by(username: params[:username])
-    # if user&.authenticate(params[:password])
-      # session[:user_id] = user.id
-      payload = { message: 'ログインしました。', name: user.name }
+      payload = { message: 'ログインしました。', token: user.token }
       # render plain: user.token
     else
       if user.present?
@@ -15,7 +12,6 @@ class SessionsController < ApplicationController
       end
     end
     render json: payload
-    # render json: {errors: params[:session][:username]}
   end
 
   def logout
