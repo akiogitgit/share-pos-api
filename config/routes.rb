@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  mount_devise_token_auth_for 'User', at: 'auth'
   post "login", to: 'sessions#login'
   delete "logout", to: 'sessions#logout'
   resources :posts
