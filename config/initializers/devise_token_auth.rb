@@ -15,13 +15,16 @@ DeviseTokenAuth.setup do |config|
   # your test suite dramatically. The possible cost value is within range from 4
   # to 31. It is recommended to not use a value more than 10 in other environments.
   # config.token_cost = Rails.env.test? ? 4 : 10
-  config.change_headers_on_each_request = false
+  # config.change_headers_on_each_request = true
   # By default, users will need to re-authenticate after 2 weeks. This setting determines how long tokens will remain valid after they are issued.
 
-  # トークンの有効期限, ユーザーは最後のログインからこの時間経過した後に再認証する必要があります。
-  config.token_lifespan = 2.weeks
-  # config.token_lifespan = 10.seconds
+  # リクエスト毎にtokenが更新される。安全。
+  config.change_headers_on_each_request = false
+  config.token_lifespan = 2.weeks # 有効期限 2.weeks以下は出来ない。
+  # config.batch_request_buffer_throttle = 30.seconds
 
+
+  # config.batch_request_buffer_throttle = 30.seconds
   # Sets the max number of concurrent devices per user, which is 10 by default.
   # After this limit is reached, the oldest tokens will be removed.
   # config.max_number_of_devices = 10
@@ -48,11 +51,11 @@ DeviseTokenAuth.setup do |config|
   # config.default_callbacks = true
 
   # Makes it possible to change the headers names
-  config.headers_names = {:'access-token' => 'access-token',
-                         :'client' => 'client',
-                         :'expiry' => 'expiry',
-                         :'uid' => 'uid',
-                         :'token-type' => 'token-type' }
+  # config.headers_names = {:'access-token' => 'access-token',
+  #                        :'client' => 'client',
+  #                        :'expiry' => 'expiry',
+  #                        :'uid' => 'uid',
+  #                        :'token-type' => 'token-type' }
 
   # By default, only Bearer Token authentication is implemented out of the box.
   # If, however, you wish to integrate with legacy Devise authentication, you can
