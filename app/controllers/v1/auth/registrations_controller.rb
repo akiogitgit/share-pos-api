@@ -1,4 +1,5 @@
 class V1::Auth::RegistrationsController < DeviseTokenAuth::RegistrationsController
+  # before_action :authenticate_admin!
   
   private
   # これで適切なカラムを受け付けるよう修正
