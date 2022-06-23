@@ -1,7 +1,8 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!, only: %i[show update destroy]
 
-  # GET /users
+  # mypage アクションを作成して、posts一覧表示とか
+  # ユーザー一覧を表示 (まだ必要ない)
   def index
     @users = User.all
 
@@ -24,6 +25,8 @@ class UsersController < ApplicationController
     end
   end
 
+  # delete はそのまま v1/authでいけそう
+  # update は registration_controller みたいのでカスタム出来ないかな？
   # PATCH/PUT /users/1
   def update
     if current_user.update(user_params)
