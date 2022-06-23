@@ -1,11 +1,14 @@
 class PostsController < ApplicationController
   before_action :set_post, only: %i[ show update destroy ]
-  before_action :authenticate
+  # before_action :authenticate
+  # before_action :authenticate_admin!
+  before_action :authenticate_user!
   # GET /posts
   def index
     @posts = Post.all
 
-    render json: @posts
+    # render json: @posts
+    render json: @posts, status: :ok
   end
 
   # GET /posts/1
