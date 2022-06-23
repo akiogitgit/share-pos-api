@@ -1,5 +1,7 @@
 class UsersController < ApplicationController
   before_action :set_user, only: %i[ show update destroy ]
+  before_action :authenticate_user!, only: %i[show]
+
   # GET /users
   def index
     @users = User.all
@@ -9,7 +11,8 @@ class UsersController < ApplicationController
 
   # GET /users/1
   def show
-    render json: @user
+    # render json: @user
+    render json: current_user
   end
 
   # POST /users
