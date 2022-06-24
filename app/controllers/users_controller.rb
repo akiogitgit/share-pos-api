@@ -13,6 +13,9 @@ class UsersController < ApplicationController
   # GET /users/1
   def show
     render json: @user
+    
+    render json: {data: @user, message: "successfully get user"},
+      status: 200
   end
 
   # POST /users
