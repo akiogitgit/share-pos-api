@@ -7,4 +7,6 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :validatable
   include DeviseTokenAuth::Concerns::User
   # validates :email, presence: true, unique: true
+
+  has_many :posts # delete_allはいらない
 end

@@ -18,12 +18,13 @@ class PostsController < ApplicationController
 
   # POST /posts
   def create
+    # paramsに加えて user_id: current_user.id したい
     @post = Post.new(post_params)
 
     if @post.save
       render json: @post, status: :created, location: @post
     else
-      render json: @post.errors, status: :unprocessable_entity
+      render json: @post.errors.full_messages, status: :unprocessable_entity
     end
   end
 
@@ -32,7 +33,7 @@ class PostsController < ApplicationController
     if @post.update(post_params)
       render json: @post
     else
-      render json: @post.errors, status: :unprocessable_entity
+      render json: @post.errors.full_messages, status: :unprocessable_entity
     end
   end
 
@@ -49,14 +50,14 @@ class PostsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def post_params
-      params.require(:post).permit(:comment, :url, :published, :evaluation, :user_id)
+      params.require(:post).permit(:comment, :url, :published, :evaluation).merge(user_id: current_user.id)
     end
 
     # api呼ぶときheadersにtoken入ってないと表示させない
-    def authenticate
-      authenticate_or_request_with_http_token do |token,options|
-        auth_user = User.find_by(token: token)
-        auth_user != nil ? true : false
-      end
-    end
+    # def authenticate
+    #   authenticate_or_request_with_http_token do |token,options|
+    #     auth_user = User.find_by(token: token)
+    #     auth_user != nil ? true : false
+    #   end
+    # end
 end
