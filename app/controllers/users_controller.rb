@@ -1,13 +1,14 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!, only: %i[show update destroy]
-  before_action :set_user
+  # before_action :set_user
 
   # mypage アクションを作成して、posts一覧表示とか
   # ユーザー一覧を表示 (まだ必要ない)
   def index
     @users = User.all
 
-    render json: @users
+    render json: {data: @users, message: "successfully get users"},
+      status: 200
   end
 
   # GET /users/1
@@ -54,6 +55,6 @@ class UsersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def user_params
-      params.require(:user).permit(:email, :username, :nickname, :password)
+      params.require(:user).permit(:email, :username, :nickname, :password, :password_confirmation)
     end
 end
