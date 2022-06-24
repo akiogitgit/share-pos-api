@@ -1,11 +1,11 @@
 class PostsController < ApplicationController
   before_action :set_post, only: %i[ show update destroy ]
   # before_action :authenticate
-  # before_action :authenticate_admin!
-  before_action :authenticate_user!
+  before_action :authenticate_user!, only: %i[update destroy]
+
   # GET /posts
   def index
-    @posts = Post.all
+    @posts = Post.all.where(published: true)
 
     # render json: @posts
     render json: @posts, status: :ok
@@ -30,16 +30,31 @@ class PostsController < ApplicationController
 
   # PATCH/PUT /posts/1
   def update
-    if @post.update(post_params)
-      render json: @post
+    # current_user.id == post.user_id なら許可する
+    if @post.user_id == current_user.id
+      if @post.update(post_params)
+        render json: {message:"投稿を更新しました。"}
+      else
+        render json: @post.errors.full_messages, status: :unprocessable_entity
+      end
     else
-      render json: @post.errors.full_messages, status: :unprocessable_entity
+      render json: {message:"あなたには、この投稿を更新する権限がありません。"}
     end
   end
 
   # DELETE /posts/1
   def destroy
-    @post.destroy
+    # current_user.id == post.user_id なら許可する
+    
+    if @post.user_id == current_user.id
+      if @post.destroy
+        render json: {message:"投稿を削除しました。"}
+      else
+        render json: @post.errors.full_messages, status: :unprocessable_entity
+      end
+    else
+      render json: {message:"あなたには、この投稿を削除する権限がありません。"}
+    end
   end
 
   private

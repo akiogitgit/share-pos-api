@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!, only: %i[show update destroy]
+  before_action :set_user
 
   # mypage アクションを作成して、posts一覧表示とか
   # ユーザー一覧を表示 (まだ必要ない)
@@ -11,7 +12,7 @@ class UsersController < ApplicationController
 
   # GET /users/1
   def show
-    render json: current_user
+    render json: @user
   end
 
   # POST /users
@@ -47,9 +48,9 @@ class UsersController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    # def set_user
-    #   @user = Post.find(params[:id])
-    # end
+    def set_user
+      @user = User.find(params[:id])
+    end
 
     # Only allow a list of trusted parameters through.
     def user_params
