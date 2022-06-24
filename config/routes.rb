@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
   mount_devise_token_auth_for 'User', at: 'auth'
-  resources :posts
+  resources :posts do
+    collection do
+      get :mypost
+    end
+  end
   resources :users
   namespace :v1 do
     mount_devise_token_auth_for "User", at: "auth"

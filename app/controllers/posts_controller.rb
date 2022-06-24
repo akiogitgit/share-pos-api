@@ -1,19 +1,29 @@
 class PostsController < ApplicationController
   before_action :set_post, only: %i[ show update destroy ]
   # before_action :authenticate
-  before_action :authenticate_user!, only: %i[update destroy]
+  before_action :authenticate_user!, only: %i[mypost update destroy]
 
   # GET /posts
   def index
     @posts = Post.all.where(published: true)
 
-    # render json: @posts
+    render json: @posts, status: :ok
+  end
+
+  def mypost
+    @posts = Post.all.where(user_id: current_user.id)
+
     render json: @posts, status: :ok
   end
 
   # GET /posts/1
   def show
-    render json: @post
+    # published: trueのみ表示
+    if @post.published == true || @post.user_id == current_user.id
+      render json: @post
+    else
+      render json: {message:"その投稿は表示出来ません。"}
+    end
   end
 
   # POST /posts
@@ -38,7 +48,7 @@ class PostsController < ApplicationController
         render json: @post.errors.full_messages, status: :unprocessable_entity
       end
     else
-      render json: {message:"あなたには、この投稿を更新する権限がありません。"}
+      render json: {message:"更新する権限がありません。"}
     end
   end
 
@@ -53,7 +63,7 @@ class PostsController < ApplicationController
         render json: @post.errors.full_messages, status: :unprocessable_entity
       end
     else
-      render json: {message:"あなたには、この投稿を削除する権限がありません。"}
+      render json: {message:"削除する権限がありません。"}
     end
   end
 
