@@ -17,16 +17,20 @@ if Rails.env == "development"
   #   )
   # end
 
-  User.create!(
-    username: "test",
-    nickname: "test",
-    email: "test@test.com",
-    password: "password"
-  )
+  # User.create!(
+  #   username: "test",
+  #   nickname: "test",
+  #   email: "test@test.com",
+  #   password: "password"
+  # )
 
-  Post.all.each do |post|
-    post.destroy
+  User.all.where(username: nil).each do |user|
+    user.destroy
   end
+
+  # Post.all.each do |post|
+  #   post.destroy
+  # end
 
   # Posts作成
   # (1..50).each do |i|
