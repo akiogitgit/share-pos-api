@@ -24,7 +24,11 @@ if Rails.env == "development"
     password: "password"
   )
 
-  # タグ作成
+  Post.all.each do |post|
+    post.destroy
+  end
+
+  # Posts作成
   # (1..50).each do |i|
   #   Post.create(
   #     comment: "すごくいい！#{i*100}円あげる",
