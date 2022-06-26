@@ -1,4 +1,4 @@
-class UsersController < ApplicationController
+class Api::V1::UsersController < ApplicationController
   before_action :authenticate_user!#, only: %i[show update destroy]
 
   # mypage アクションを作成して、posts一覧表示とか
