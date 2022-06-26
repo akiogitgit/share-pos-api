@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_06_23_234734) do
+ActiveRecord::Schema[7.0].define(version: 2022_06_24_141440) do
   create_table "posts", force: :cascade do |t|
     t.string "comment"
     t.string "url", null: false
@@ -34,9 +34,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_23_234734) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.string "unconfirmed_email"
-    t.string "username"
-    t.string "nickname"
-    t.string "email"
+    t.string "username", null: false
+    t.string "email", null: false
     t.text "tokens"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
