@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_06_24_141440) do
+ActiveRecord::Schema[7.0].define(version: 2022_06_24_171440) do
   create_table "posts", force: :cascade do |t|
     t.string "comment"
     t.string "url", null: false
