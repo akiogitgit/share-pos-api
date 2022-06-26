@@ -8,23 +8,38 @@
 if Rails.env == "development"
 
   # 投稿作成
-  (1..2).each do |i|
-    User.create(
-      username: "testuser#{i}",
-      nickname: "あきお#{i}",
-      password: "anpan#{i}",
-      password_confirmation: "anpan",
-    )
+  # (1..2).each do |i|
+  #   User.create(
+  #     username: "testuser#{i}",
+  #     nickname: "あきお#{i}",
+  #     password: "anpan#{i}",
+  #     password_confirmation: "anpan",
+  #   )
+  # end
+
+  # User.create!(
+  #   username: "test",
+  #   nickname: "test",
+  #   email: "test@test.com",
+  #   password: "password"
+  # )
+
+  User.all.where(username: nil).each do |user|
+    user.destroy
   end
 
-  # タグ作成
-  (1..50).each do |i|
-    Post.create(
-      comment: "すごくいい！#{i*100}円あげる",
-      url: "https://tlms.tsc.u-tokai.ac.jp/course/view.php?id=63304&section=#{i}",
-      published: i % 2 == 0,
-      evaluation: (i % 5) + 1,
-      user_id: (i % 2) + 1,
-    )
-  end
+  # Post.all.each do |post|
+  #   post.destroy
+  # end
+
+  # Posts作成
+  # (1..50).each do |i|
+  #   Post.create(
+  #     comment: "すごくいい！#{i*100}円あげる",
+  #     url: "https://tlms.tsc.u-tokai.ac.jp/course/view.php?id=63304&section=#{i}",
+  #     published: i % 2 == 0,
+  #     evaluation: (i % 5) + 1,
+  #     user_id: (i % 2) + 1,
+  #   )
+  # end
 end

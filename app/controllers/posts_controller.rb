@@ -1,16 +1,30 @@
 class PostsController < ApplicationController
   before_action :set_post, only: %i[ show update destroy ]
-  before_action :authenticate
+  before_action :authenticate_user!, only: %i[mypost create update destroy]
+
   # GET /posts
   def index
-    @posts = Post.all
+    @posts = Post.all.where(published: true)
+    render json: {data: @posts, message: "successfully get posts"},
+      status: 200
+  end
 
-    render json: @posts
+  def mypost
+    @posts = current_user.posts
+    render json: {data: @posts, message: "successfully get posts"},
+      status: 200
   end
 
   # GET /posts/1
   def show
-    render json: @post
+    # published: trueのみ表示
+    if @post.published == true || @post.user_id == current_user.id
+      render json: {data: @posts, message: "successfully get post"},
+        status: 200
+    else
+      # フロントのアラートで表示したいのは、日本語で書く それ以外はRailsに任せる
+      render status: 404 # 存在自体を知られたくないから404
+    end
   end
 
   # POST /posts
@@ -18,24 +32,44 @@ class PostsController < ApplicationController
     @post = Post.new(post_params)
 
     if @post.save
-      render json: @post, status: :created, location: @post
+      render json: {data: @post, message: "successfully create post"},
+        status: 200
     else
-      render json: @post.errors, status: :unprocessable_entity
+      render json: {message: @post.errors.full_messages},
+        status: 400
     end
   end
 
   # PATCH/PUT /posts/1
   def update
-    if @post.update(post_params)
-      render json: @post
+    if @post.user_id == current_user.id
+      if @post.update(post_params)
+        render json: {data: @posts, message: "successfully update post"},
+          status: 200
+      else
+        render json: {message: @post.errors.full_messages},
+          status: 400
+      end
     else
-      render json: @post.errors, status: :unprocessable_entity
+      render json: {message: "更新する権限がありません。"},
+        status: 403
     end
   end
 
   # DELETE /posts/1
   def destroy
-    @post.destroy
+    if @post.user_id == current_user.id
+      if @post.destroy
+        render json: {data: @post, message: "投稿を削除しました。"},
+          status: 200
+      else
+        render json: {message: @post.errors.full_messages},
+          status: 400
+      end
+    else
+      render json: {message: "削除する権限がありません。"},
+        status: 403
+    end
   end
 
   private
@@ -46,14 +80,6 @@ class PostsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def post_params
-      params.require(:post).permit(:comment, :url, :published, :evaluation, :user_id)
-    end
-
-    # api呼ぶときheadersにtoken入ってないと表示させない
-    def authenticate
-      authenticate_or_request_with_http_token do |token,options|
-        auth_user = User.find_by(token: token)
-        auth_user != nil ? true : false
-      end
+      params.require(:post).permit(:comment, :url, :published, :evaluation).merge(user_id: current_user.id)
     end
 end
