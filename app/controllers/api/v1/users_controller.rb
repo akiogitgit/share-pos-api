@@ -1,6 +1,6 @@
 class Api::V1::UsersController < ApplicationController
   before_action :authenticate_user!#, only: %i[show update destroy]
-
+  before_action :set_user, only: %i[show]
   # mypage アクションを作成して、posts一覧表示とか
   # ユーザー一覧を表示 (まだ必要ない)
   def index
@@ -11,10 +11,10 @@ class Api::V1::UsersController < ApplicationController
   end
 
   # GET /users/1
+  # 今後フォロー機能や、他のユーザーの投稿を個別で見る時に使う
   def show
-    render json: @user
-    
-    render json: {data: @user, message: "successfully get user"},
+    posts = @user.posts
+    render json: {data: {user: @user, posts: posts}, message: "successfully get user"},
       status: 200
   end
 
@@ -52,6 +52,9 @@ class Api::V1::UsersController < ApplicationController
   private
 
     # Only allow a list of trusted parameters through.
+    def set_user
+      @user = User.find(params[:id])
+    end
     # def user_params
     #   params.require(:user).permit(:email, :username, :nickname, :password, :password_confirmation)
     # end
