@@ -1,4 +1,4 @@
-class PostsController < ApplicationController
+class Api::V1::PostsController < ApplicationController
   before_action :set_post, only: %i[ show update destroy ]
   before_action :authenticate_user!, only: %i[mypost create update destroy]
 
@@ -19,7 +19,7 @@ class PostsController < ApplicationController
   def show
     # published: trueのみ表示
     if @post.published == true || @post.user_id == current_user.id
-      render json: {data: @posts, message: "successfully get post"},
+      render json: {data: @post, message: "successfully get post"},
         status: 200
     else
       # フロントのアラートで表示したいのは、日本語で書く それ以外はRailsに任せる
@@ -44,7 +44,7 @@ class PostsController < ApplicationController
   def update
     if @post.user_id == current_user.id
       if @post.update(post_params)
-        render json: {data: @posts, message: "successfully update post"},
+        render json: {data: @post, message: "successfully update post"},
           status: 200
       else
         render json: {message: @post.errors.full_messages},
