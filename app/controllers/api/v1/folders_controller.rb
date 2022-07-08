@@ -1,9 +1,6 @@
 class Api::V1::FoldersController < ApplicationController
   before_action :set_folder, only: %i[ show update destroy ]
-  # only消す
-  before_action :authenticate_user!, only: %i[create update destroy]
-
-  # 全部認証が必要にする
+  before_action :authenticate_user!
 
   # 自分のフォルダ名一覧
   def index
@@ -15,11 +12,17 @@ class Api::V1::FoldersController < ApplicationController
 
   # 指定したフォルダ内の投稿一覧
   def show
+    if @folder.user_id != current_user.id
+      render json: {message: "このフォルダを表示する権限がありません。"},
+        status: 403
+      return
+    end
+
     @posts = @folder.folder_post_relations.map do |relation|
       relation.post
     end
     render json: {data: {name: @folder.name, posts:@posts}, message: "successfully get posts"},
-    status: 200
+      status: 200
   end
 
   # 新しいフォルダ作成
@@ -28,40 +31,44 @@ class Api::V1::FoldersController < ApplicationController
 
     if @folder.save
       render json: {data: @folder, message: "successfully create folder"},
-      status: 200
+        status: 200
     else
       render json: {message: @folder.errors.full_messages},
-      status: 400
+        status: 400
     end
   end
 
   # フォルダ名変更
   def update
-    if @folder.user_id == current_user.id
-      if @folder.update(folder_params)
-        render json: @folder
-      else
-        render json: @folder.errors, status: :unprocessable_entity
-      end
-    else
+    if @folder.user_id != current_user.id
       render json: {message: "更新する権限がありません。"},
         status: 403
+      return
+    end
+
+    if @folder.update(folder_params)
+      render json: {data: @folder, message: "successfully update folder"},
+        status: 200
+    else
+      render json: {message: @folder.errors.full_messages},
+        status: 400
     end
   end
 
   # フォルダ削除 delete_all で 中間テーブルも削除
   def destroy
-    if @folder.user_id == current_user.id
-      if @folder.destroy
-        render json: {data: @folder, message: "投稿を削除しました。"},
-          status: 200
-      else
-        render json: {message: @folder.errors.full_messages},
-          status: 400
-      end
-    else
+    if @folder.user_id != current_user.id
       render json: {message: "削除する権限がありません。"},
         status: 403
+      return
+    end
+
+    if @folder.destroy
+      render json: {data: @folder, message: "投稿を削除しました。"},
+        status: 200
+    else
+      render json: {message: @folder.errors.full_messages},
+        status: 400
     end
   end
 
