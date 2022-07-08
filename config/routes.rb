@@ -11,11 +11,14 @@ Rails.application.routes.draw do
           get :mypost
         end
       end
-      resources :folders
-      resources :folder_post_relations
-      get "bookmarks", to: "folder_post_relations#index"
-      post "bookmarks", to: "folder_post_relations#create"
-      delete "bookmarks", to: "folder_post_relations#delete"
+      resources :folders do
+        collection do
+          # 後で消す
+          get "bookmarks", to: "folder_post_relations#index"
+          post "bookmarks", to: "folder_post_relations#create"
+          delete "bookmarks", to: "folder_post_relations#delete"
+        end
+      end
     end
 end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
