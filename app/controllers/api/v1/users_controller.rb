@@ -1,7 +1,6 @@
 class Api::V1::UsersController < ApplicationController
   before_action :authenticate_user!#, only: %i[show update destroy]
   before_action :set_user, only: %i[show]
-  # mypage アクションを作成して、posts一覧表示とか
   # ユーザー一覧を表示 (名前だけでいい)
   def index
     @users = User.pluck(:username)
@@ -10,7 +9,6 @@ class Api::V1::UsersController < ApplicationController
       status: 200
   end
 
-  # GET /users/1
   # 今後フォロー機能や、他のユーザーの投稿を個別で見る時に使う
   def show
     posts = @user.posts

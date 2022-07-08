@@ -2,7 +2,6 @@ class Api::V1::FolderPostRelationsController < ApplicationController
   # before_action :set_folder_post_relation, only: %i[ show update destroy ]
 
   # 全部認証が必要にする
-  # 自分のフォルダ名一覧
   def index
     @folder_post_relations = FolderPostRelation.all
 
@@ -14,7 +13,7 @@ class Api::V1::FolderPostRelationsController < ApplicationController
   #   render json: @folder_post_relation
   # end
 
-  # 新しいフォルダ作成
+  # フォルダに記事を追加
   def create
     @folder_post_relations = Folder.new(folder_post_relation_params)
 
@@ -25,7 +24,6 @@ class Api::V1::FolderPostRelationsController < ApplicationController
     end
   end
 
-  # フォルダ名変更
   # def update
   #   if @folder_post_relations.update(folder_post_relation_params)
   #     render json: @folder_post_relations
@@ -34,7 +32,7 @@ class Api::V1::FolderPostRelationsController < ApplicationController
   #   end
   # end
 
-  # フォルダ削除 delete_all で 中間テーブルも削除
+  # フォルダの記事を削除
   def destroy
     @folder_post_relations.destroy
   end

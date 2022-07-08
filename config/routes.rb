@@ -13,6 +13,9 @@ Rails.application.routes.draw do
       end
       resources :folders
       resources :folder_post_relations
+      get "bookmarks", to: "folder_post_relations#index"
+      post "bookmarks", to: "folder_post_relations#create"
+      delete "bookmarks", to: "folder_post_relations#delete"
     end
 end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
