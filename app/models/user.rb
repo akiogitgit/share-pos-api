@@ -9,4 +9,5 @@ class User < ActiveRecord::Base
   # validates :email, presence: true, unique: true
 
   has_many :posts # delete_allはいらない
+  has_many :folders, dependent: :delete_all
 end

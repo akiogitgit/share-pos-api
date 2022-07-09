@@ -6,9 +6,11 @@ Rails.application.routes.draw do
     namespace :v1 do
       mount_devise_token_auth_for "User", at: "auth"
       resources :users, only: %i[index show]
-      resources :posts do
+      resources :posts
+      resources :folders do
         collection do
-          get :mypost
+          post "bookmarks", to: "folder_post_relations#create"
+          delete "bookmarks/:id", to: "folder_post_relations#destroy"
         end
       end
     end
