@@ -18,8 +18,19 @@ class Api::V1::FoldersController < ApplicationController
       return
     end
 
+    # bookmark.idも返す
     @posts = @folder.folder_post_relations.map do |relation|
-      relation.post
+      {
+        id: relation.post.id,
+        comment: relation.post.comment,
+        url: relation.post.url,
+        evaluation: relation.post.evaluation,
+        published: relation.post.published,
+        user_id: relation.post.user_id,
+        created_at: relation.post.created_at,
+        updated_at: relation.post.updated_at,
+        bookmark_id: relation.id,
+      }
     end
     render json: {data: {name: @folder.name, posts:@posts}, message: "successfully get posts"},
       status: 200
@@ -30,7 +41,7 @@ class Api::V1::FoldersController < ApplicationController
     @folder = Folder.new(folder_params)
 
     if @folder.save
-      render json: {data: @folder, message: "successfully create folder"},
+      render json: {data: @folder, message: "フォルダ作成に成功しました。"},
         status: 200
     else
       render json: {message: @folder.errors.full_messages},
@@ -47,7 +58,7 @@ class Api::V1::FoldersController < ApplicationController
     end
 
     if @folder.update(folder_params)
-      render json: {data: @folder, message: "successfully update folder"},
+      render json: {data: @folder, message: "フォルダ名の更新に成功しました"},
         status: 200
     else
       render json: {message: @folder.errors.full_messages},
