@@ -20,7 +20,7 @@ class Api::V1::FolderPostRelationsController < ApplicationController
     end
 
     if @bookmark.save
-      render json: {data: @bookmark, message: "successfully create folder"},
+      render json: {data: @bookmark, message: "successfully create bookmark"},
         status: 200
     else
       render json: {message: @bookmark.errors.full_messages},
@@ -37,7 +37,7 @@ class Api::V1::FolderPostRelationsController < ApplicationController
     end
 
     if @bookmark.destroy
-      render json: {data: @bookmark, message: "ブックマークを削除しました。"},
+      render json: {data: @bookmark, message: "successfully delete bookmark"},
         status: 200
     else
       render json: {message: @bookmark.errors.full_messages},
