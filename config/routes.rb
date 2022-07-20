@@ -13,6 +13,7 @@ Rails.application.routes.draw do
           delete "bookmarks/:id", to: "folder_post_relations#destroy"
         end
       end
+      resources :scrapings, only: %i[create]
     end
 end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
