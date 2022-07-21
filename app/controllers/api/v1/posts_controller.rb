@@ -1,10 +1,10 @@
 class Api::V1::PostsController < ApplicationController
   before_action :set_post, only: %i[ show update destroy ]
-  before_action :authenticate_user!, only: %i[mypost create update destroy]
+  before_action :authenticate_user!, only: %i[create update destroy delete_all]
 
   # GET /posts
   def index
-    @posts = Post.all.where(published: true)
+    @posts = Post.all.where(published: true)#.as_json(include: [user: { only: [:username] }])
     render json: {data: @posts, message: "successfully get posts"},
       status: 200
   end
@@ -64,6 +64,12 @@ class Api::V1::PostsController < ApplicationController
     else
       render json: {message: @post.errors.full_messages},
         status: 400
+    end
+  end
+
+  def destroy_all
+    Post.all.each do |post|
+      post.destroy
     end
   end
 
