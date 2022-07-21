@@ -5,4 +5,10 @@ class Post < ApplicationRecord
   
   validates :url, presence: true
   validates :user_id, presence: true
+  
+  def as_json(options={})
+    super(
+      include: [user: { only: [:username] }]
+    )
+  end
 end
