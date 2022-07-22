@@ -23,21 +23,21 @@ class Api::V1::PostsController < ApplicationController
   # POST /posts
   def create
     @post = Post.new(post_params)
+    meta = MetaInspector.new(@post.url)
 
-    if @post.save
-      meta = MetaInspector.new(@post.url)
+    # meta情報も追加する
+    if @post.save && meta.present?
       title = meta.title
       image = meta.images.best
       MetaInfo.create({post_id:@post.id, image:image, title:title})
 
-      render json: {data: @post, message: "successfully create post"},
+      render json: {data: @post, message: "successfully create post and meta_info"},
         status: 200
     else
       render json: {message: @post.errors.full_messages},
         status: 400
       return
     end
-
   end
 
   # PATCH/PUT /posts/1
