@@ -28,13 +28,13 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_22_023824) do
     t.index ["user_id"], name: "index_folders_on_user_id"
   end
 
-  create_table "metas", force: :cascade do |t|
+  create_table "meta_infos", force: :cascade do |t|
     t.integer "post_id", null: false
     t.string "image"
     t.string "title"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["post_id"], name: "index_metas_on_post_id"
+    t.index ["post_id"], name: "index_meta_infos_on_post_id"
   end
 
   create_table "posts", force: :cascade do |t|
@@ -74,6 +74,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_22_023824) do
   add_foreign_key "folder_post_relations", "folders"
   add_foreign_key "folder_post_relations", "posts"
   add_foreign_key "folders", "users"
-  add_foreign_key "metas", "posts"
+  add_foreign_key "meta_infos", "posts"
   add_foreign_key "posts", "users"
 end

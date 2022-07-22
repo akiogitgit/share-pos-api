@@ -5,16 +5,17 @@ class Api::V1::PostsController < ApplicationController
   # GET /posts
   def index
     @posts = Post.all.where(published: true)#.as_json(include: [user: { only: [:username] }])
-    @posts2 = Array.new
-    @posts.each do |post|
-      posts2 = post.as_json
-      meta = MetaInspector.new("https://qiita.com/kaito_program/items/27611cff6375edca01f2")
-      image = meta.images.best
-      # posts2["user"] = post.user
-      posts2["user"] = image
-      @posts2 << posts2
-    end
-    render json: {data: @posts2, message: "successfully get posts"},
+    # @posts2 = Array.new
+    # @posts.each do |post|
+    #   posts2 = post.as_json
+    #   meta = MetaInspector.new("https://qiita.com/kaito_program/items/27611cff6375edca01f2")
+    #   image = meta.images.best
+    #   # posts2["user"] = post.user
+    #   posts2["user"] = image
+    #   posts2["meta"] = post.meta
+    #   @posts2 << posts2
+    # end
+    render json: {data: @posts, message: "successfully get posts"},
       status: 200
   end
 
@@ -34,12 +35,19 @@ class Api::V1::PostsController < ApplicationController
     @post = Post.new(post_params)
 
     if @post.save
+      meta = MetaInspector.new(@post.url)
+      title = meta.title
+      image = meta.images.best
+      MetaInfo.create({post_id:@post.id, image:image, title:title})
+
       render json: {data: @post, message: "successfully create post"},
         status: 200
     else
       render json: {message: @post.errors.full_messages},
         status: 400
+      return
     end
+
   end
 
   # PATCH/PUT /posts/1
