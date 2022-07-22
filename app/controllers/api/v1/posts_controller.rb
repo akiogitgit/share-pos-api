@@ -4,7 +4,7 @@ class Api::V1::PostsController < ApplicationController
 
   # GET /posts
   def index
-    @posts = Post.all.where(published: true)#.as_json(include: [user: { only: [:username] }])
+    @posts = Post.all.where(published: true)
     render json: {data: @posts, message: "successfully get posts"},
       status: 200
   end
@@ -23,13 +23,20 @@ class Api::V1::PostsController < ApplicationController
   # POST /posts
   def create
     @post = Post.new(post_params)
+    meta = MetaInspector.new(@post.url)
 
-    if @post.save
-      render json: {data: @post, message: "successfully create post"},
+    # meta情報も追加する
+    if @post.save && meta.present?
+      title = meta.title
+      image = meta.images.best
+      MetaInfo.create({post_id:@post.id, image:image, title:title})
+
+      render json: {data: @post, message: "successfully create post and meta_info"},
         status: 200
     else
       render json: {message: @post.errors.full_messages},
         status: 400
+      return
     end
   end
 

@@ -3,7 +3,7 @@ class Api::V1::MetasController < ApplicationController
   # URLを受け取ると、meta情報を返す
   def index
     if params[:url].nil?
-      render json: {data: params,message: "urlを付与して下さい"},
+      render json: {message: "urlを付与して下さい"},
         status: 400
       return
     end
