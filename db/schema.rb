@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_07_06_021418) do
+ActiveRecord::Schema[7.0].define(version: 2022_07_22_023824) do
   create_table "folder_post_relations", force: :cascade do |t|
     t.integer "folder_id", null: false
     t.integer "post_id", null: false
@@ -26,6 +26,15 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_06_021418) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_folders_on_user_id"
+  end
+
+  create_table "metas", force: :cascade do |t|
+    t.integer "post_id", null: false
+    t.string "image"
+    t.string "title"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_metas_on_post_id"
   end
 
   create_table "posts", force: :cascade do |t|
@@ -65,5 +74,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_06_021418) do
   add_foreign_key "folder_post_relations", "folders"
   add_foreign_key "folder_post_relations", "posts"
   add_foreign_key "folders", "users"
+  add_foreign_key "metas", "posts"
   add_foreign_key "posts", "users"
 end

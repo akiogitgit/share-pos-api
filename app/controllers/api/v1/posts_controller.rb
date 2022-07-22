@@ -5,7 +5,16 @@ class Api::V1::PostsController < ApplicationController
   # GET /posts
   def index
     @posts = Post.all.where(published: true)#.as_json(include: [user: { only: [:username] }])
-    render json: {data: @posts, message: "successfully get posts"},
+    @posts2 = Array.new
+    @posts.each do |post|
+      posts2 = post.as_json
+      meta = MetaInspector.new("https://qiita.com/kaito_program/items/27611cff6375edca01f2")
+      image = meta.images.best
+      # posts2["user"] = post.user
+      posts2["user"] = image
+      @posts2 << posts2
+    end
+    render json: {data: @posts2, message: "successfully get posts"},
       status: 200
   end
 
