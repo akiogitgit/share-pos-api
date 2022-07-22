@@ -8,9 +8,16 @@ Rails.application.routes.draw do
       resources :users, only: %i[index show]
       resources :posts do
         collection do
-          get :mypost
+          delete :destroy_all
         end
       end
+      resources :folders do
+        collection do
+          post "bookmarks", to: "folder_post_relations#create"
+          delete "bookmarks/:id", to: "folder_post_relations#destroy"
+        end
+      end
+      resources :metas, only: %i[index]
     end
 end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
