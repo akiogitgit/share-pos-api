@@ -7,10 +7,10 @@ class Post < ApplicationRecord
   validates :url, presence: true, format: /\A#{URI::regexp(%w(http https))}\z/
   validates :user_id, presence: true
   
-  # 全ての返すpostのデータに、user.username id, meta_infoを付ける
+  # 全ての返すpostのデータに、user.username, meta_infoを付ける
   def as_json(options={})
     super(
-      include: [user: {only: [:username, :id]}, meta_info: {only: [:image, :title]}]
+      include: [user: {only: [:username]}, meta_info: {only: [:image, :title]}]
     )
   end
 end
