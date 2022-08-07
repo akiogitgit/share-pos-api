@@ -8,6 +8,7 @@ class Api::V1::FolderPostRelationsController < ApplicationController
     post = Post.find(@bookmark.post_id)
     folder = Folder.find(@bookmark.folder_id)
 
+    # 他人の非公開の投稿の時
     if post.published == false && current_user.id != post.user_id
       render status: 404
       return
