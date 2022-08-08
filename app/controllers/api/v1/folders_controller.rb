@@ -18,7 +18,7 @@ class Api::V1::FoldersController < ApplicationController
       return
     end
 
-    # bookmark.idを加えて返す
+    # 中間テーブルid、Post一覧、そのPostのuser情報も必要
     @posts = @folder.folder_post_relations.map do |relation|
       {
         id: relation.post.id,
@@ -29,10 +29,16 @@ class Api::V1::FoldersController < ApplicationController
         user_id: relation.post.user_id,
         created_at: relation.post.created_at,
         updated_at: relation.post.updated_at,
-        bookmark_id: relation.id,
+        bookmark: {
+          id: relation.id
+        },
+        user: {
+          username: relation.post.user.username
+        }
       }
     end
-    render json: {data: {name: @folder.name, posts:@posts}, message: "successfully get posts"},
+    # @posts = @folder.folder_post_relations.as_json(include: :post)
+    render json: {data: {id: @folder.id, name: @folder.name, posts:@posts}, message: "successfully get posts"},
       status: 200
   end
 
