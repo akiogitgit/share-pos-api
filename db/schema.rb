@@ -42,9 +42,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_22_023824) do
     t.string "url", null: false
     t.boolean "published", default: false
     t.integer "evaluation", default: 1
+    t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_id", null: false
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
