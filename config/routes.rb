@@ -5,6 +5,12 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       # mount_devise_token_auth_for "User", at: "auth"
+      resources :auth, only: %i[] do
+        collection do
+          post :login
+          post :sign_up
+        end
+      end
       resources :users, only: %i[index show] do
         collection do
           get :me 
