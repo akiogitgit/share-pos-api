@@ -16,7 +16,7 @@ class Api::V1::AuthController < ApplicationController
     user = User.find_by(email: params[:email])
     if user&.authenticate(params[:password])
       # payload = { message: 'ログインしました。', token: user.token }
-      render json: {data: {token: user.token}, message: "successfully login"},
+      render json: {data: {user: user}, message: "successfully login"},
       status: 200
     else
       if user.present?

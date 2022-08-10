@@ -6,8 +6,8 @@ class Api::V1::UsersController < ApplicationController
   # ユーザー一覧を表示 (名前だけでいい)
   def index
     # id:id, username:username にならない
-    # @users = User.pluck(:id,:username)
-    @users = User.all
+    @users = User.pluck(:id,:username)
+    # @users = User.all
 
     render json: {data: @users, message: "successfully get users"},
       status: 200
