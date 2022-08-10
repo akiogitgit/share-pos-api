@@ -1,5 +1,5 @@
 class Api::V1::UsersController < ApplicationController
-  before_action :authenticate_user!#, only: %i[show update destroy]
+  # before_action :authenticate_user!#, only: %i[show update destroy]
   before_action :set_user, only: %i[show]
   # ユーザー一覧を表示 (名前だけでいい)
   def index
