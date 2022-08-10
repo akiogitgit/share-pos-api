@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
   # devise :database_authenticatable, :registerable,
   #        :recoverable, :rememberable, :validatable
   # include DeviseTokenAuth::Concerns::User
-  # validates :email, presence: true, unique: true has_secure_token
+  validates :email, uniqueness: true
 
   has_many :posts # delete_allはいらない
   has_many :folders, dependent: :delete_all

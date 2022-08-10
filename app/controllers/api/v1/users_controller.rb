@@ -1,10 +1,13 @@
 class Api::V1::UsersController < ApplicationController
   # before_action :authenticate_user!#, only: %i[show update destroy]
   before_action :set_user, only: %i[show]
+  before_action :authenticate
+
   # ユーザー一覧を表示 (名前だけでいい)
   def index
     # id:id, username:username にならない
-    @users = User.pluck(:id,:username)
+    # @users = User.pluck(:id,:username)
+    @users = User.all
 
     render json: {data: @users, message: "successfully get users"},
       status: 200

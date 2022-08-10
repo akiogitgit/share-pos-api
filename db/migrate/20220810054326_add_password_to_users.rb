@@ -4,5 +4,6 @@ class AddPasswordToUsers < ActiveRecord::Migration[7.0]
     add_column :users, :token, :string
     add_index :users, :token, unique: true
     remove_index :users, :email
+    change_column :users, :email, :string, null: false, unique: true
   end
 end

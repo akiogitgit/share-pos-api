@@ -1,8 +1,6 @@
 class ApplicationController < ActionController::API
-        # include DeviseTokenAuth::Concerns::SetUserByToken
   include ActionController::HttpAuthentication::Token::ControllerMethods
   include ActionController::HttpAuthentication::Basic::ControllerMethods
-  include ActionController::HttpAuthentication::Token::ControllerMethods
   # include DeviseHackFakeSession
   # before_action :configure_permitted_parameters, if: :devise_controller?
   # before_action :configure_account_update_parameters, if: :devise_controller?
@@ -16,4 +14,20 @@ class ApplicationController < ActionController::API
   # def configure_account_update_parameters
   #   devise_parameter_sanitizer.permit(:account_update, keys: [:nickname, :username])
   # end
+
+  protected
+  def authenticate
+    authenticate_token || render_unauthorized
+  end
+
+  def authenticate_token
+    authenticate_with_http_token do |token, options|
+      auth_user = User.find_by(token: token)
+    end
+  end
+
+  def render_unauthorized
+    render json: {message: "token invalid"},
+    status: 401
+  end
 end
