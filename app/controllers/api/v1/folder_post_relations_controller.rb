@@ -50,7 +50,7 @@ class Api::V1::FolderPostRelationsController < ApplicationController
           id: @bookmark.folder_id
         }
       }
-      render json: {data: @post, message: "successfully create bookmark"},
+      render json: {data: @post, message: "successfully added post to folder"},
         status: 200
     else
       render json: {message: @bookmark.errors.full_messages},

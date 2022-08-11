@@ -15,7 +15,6 @@ class Api::V1::AuthController < ApplicationController
   def login
     user = User.find_by(email: params[:email])
     if user&.authenticate(params[:password])
-      # payload = { message: 'ログインしました。', token: user.token }
       render json: {data: {user: user}, message: "successfully login"},
       status: 200
     else
@@ -34,20 +33,3 @@ class Api::V1::AuthController < ApplicationController
       params.permit(:username, :email, :password, :password_confirmation)
     end
 end
-
-# def login
-#   user = User.find_by(username: params[:session][:username])
-#   if user&.authenticate(params[:session][:password])
-#     payload = { message: 'ログインしました。', token: user.token }
-#     # render plain: user.token
-#   else
-#     if user.present?
-#       payload = { errors: ['パスワードが正しくありません。'] }
-#     else
-#       payload = { errors: ['メールアドレスが存在しません。'] }
-#     end
-#   end
-#   # render json: payload
-#   render json: {data: payload, message: "successfully login"},
-#   status: 200
-# end
