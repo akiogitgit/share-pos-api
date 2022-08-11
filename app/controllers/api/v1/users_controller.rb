@@ -22,6 +22,26 @@ class Api::V1::UsersController < ApplicationController
       status: 200
   end
 
+  def update
+    if current_user.update(user_params)
+      render json: {data: current_user, message: "successfully update user"},
+        status: 200
+    else
+      render json: {message: current_user.errors.full_messages},
+        status: 400
+    end
+  end
+
+  def delete
+    if current_user.destroy
+      render json: {data: current_user, message: "投稿を削除しました。"},
+        status: 200
+    else
+      render json: {message: current_user.errors.full_messages},
+        status: 400
+    end
+  end
+
   def me
     render json: {data: current_user, message: "successfully get user"},
       status: 200
@@ -31,5 +51,9 @@ class Api::V1::UsersController < ApplicationController
 
     def set_user
       @user = User.find(params[:id])
+    end
+
+    def user_params
+      params.permit(:username, :email)
     end
 end

@@ -5,15 +5,15 @@ class Api::V1::PostsController < ApplicationController
 
   # GET /posts
   def index
-    @posts = Post.all.where(published: true)
-    render json: {data: {posts:@posts, user:current_user}, message: "successfully get posts"},
+    @posts = Post.where(published: true)
+    render json: {data: @posts, message: "successfully get posts"},
       status: 200
   end
 
   # GET /posts/1
   def show
     # published: trueのみ表示
-    if @post.published == true || @post.user_id == current_user.id
+    if @post.published == true || current_user && @post.user_id == current_user.id
       render json: {data: @post, message: "successfully get post"},
         status: 200
     else
@@ -75,9 +75,9 @@ class Api::V1::PostsController < ApplicationController
     end
   end
 
-  def destroy_all
+  def delete_all
     Post.all.each do |post|
-      post.destroy
+      post.delete
     end
   end
 

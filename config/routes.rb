@@ -13,12 +13,16 @@ Rails.application.routes.draw do
       end
       resources :users, only: %i[index show] do
         collection do
-          get :me 
+          get :me
         end
       end
+      put "users", to: "users#update" # idを受け取らない
+      patch "users", to: "users#update"
+      delete "users", to: "users#delete"
+      
       resources :posts do
         collection do
-          delete :destroy_all
+          delete :delete_all
         end
       end
       resources :folders do
