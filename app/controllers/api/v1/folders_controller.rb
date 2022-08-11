@@ -1,6 +1,6 @@
 class Api::V1::FoldersController < ApplicationController
   before_action :set_folder, only: %i[ show update destroy ]
-  before_action :authenticate_user!
+  before_action :authenticate
 
   # 自分のフォルダ名一覧
   def index
@@ -38,8 +38,13 @@ class Api::V1::FoldersController < ApplicationController
       }
     end
     # @posts = @folder.folder_post_relations.as_json(include: :post)
-    render json: {data: {id: @folder.id, name: @folder.name, posts:@posts}, message: "successfully get posts"},
-      status: 200
+    render json: {
+      data: {
+        id: @folder.id,
+        name: @folder.name,
+        posts:@posts
+      },
+      message: "successfully get posts"}, status: 200
   end
 
   # 新しいフォルダ作成
@@ -95,6 +100,6 @@ class Api::V1::FoldersController < ApplicationController
     end
 
     def folder_params
-      params.require(:folder).permit(:name).merge(user_id: current_user.id)
+      params.permit(:name).merge(user_id: current_user.id)
     end
 end
