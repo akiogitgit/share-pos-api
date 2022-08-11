@@ -1,6 +1,6 @@
 class Api::V1::FolderPostRelationsController < ApplicationController
   before_action :set_bookmark, only: %i[destroy]
-  before_action :authenticate_user!
+  before_action :authenticate
 
   # フォルダに投稿を追加
   def create
@@ -21,7 +21,36 @@ class Api::V1::FolderPostRelationsController < ApplicationController
     end
 
     if @bookmark.save
-      render json: {data: @bookmark, message: "successfully create bookmark"},
+      # 欲しいのは folder.id, post情報(usernameも含む)
+      # @post = {
+      #   post: @bookmark.post,
+      #   bookmark: {
+      #     id: @bookmark.id
+      #   },
+      #   folder: {
+      #     id: @bookmark.folder_id
+      #   }
+      # }
+      @post = {
+        id: @bookmark.post.id,
+        comment: @bookmark.post.comment,
+        url: @bookmark.post.url,
+        evaluation: @bookmark.post.evaluation,
+        published: @bookmark.post.published,
+        user_id: @bookmark.post.user_id,
+        created_at: @bookmark.post.created_at,
+        updated_at: @bookmark.post.updated_at,
+        user: {
+          username: @bookmark.post.user.username
+        },
+        bookmark: {
+          id: @bookmark.id
+        },
+        folder: {
+          id: @bookmark.folder_id
+        }
+      }
+      render json: {data: @post, message: "successfully added post to folder"},
         status: 200
     else
       render json: {message: @bookmark.errors.full_messages},
@@ -30,6 +59,7 @@ class Api::V1::FolderPostRelationsController < ApplicationController
   end
 
   # フォルダの記事を削除
+  # どの形のレスポンスが、フロントにいいか
   def destroy
     if @bookmark.folder.user_id != current_user.id
       render json: {message: "削除する権限がありません。"},
@@ -52,6 +82,6 @@ class Api::V1::FolderPostRelationsController < ApplicationController
     end
 
     def bookmark_params
-      params.require(:bookmark).permit(:folder_id, :post_id)
+      params.permit(:folder_id, :post_id)
     end
 end
