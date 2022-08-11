@@ -15,7 +15,7 @@ class Api::V1::AuthController < ApplicationController
   def login
     user = User.find_by(email: params[:email])
     if user&.authenticate(params[:password])
-      render json: {data: {user: user}, message: "successfully login"},
+      render json: {data: user, message: "successfully login"},
       status: 200
     else
       if user.present?
