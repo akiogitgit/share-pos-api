@@ -1,7 +1,7 @@
 class Post < ApplicationRecord
   belongs_to :user
   has_many :folders, through: :folder_post_relations
-  has_many :folder_post_relations
+  has_many :folder_post_relations, dependent: :destroy
   has_one :meta_info, dependent: :destroy
   
   validates :url, presence: true, format: /\A#{URI::regexp(%w(http https))}\z/

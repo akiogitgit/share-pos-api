@@ -69,9 +69,9 @@ class Api::V1::PostsController < ApplicationController
     end
   end
 
-  def delete_all
+  def destroy_all
     Post.all.each do |post|
-      post.delete
+      post.destroy
     end
   end
 

@@ -22,7 +22,7 @@ Rails.application.routes.draw do
       
       resources :posts do
         collection do
-          delete :delete_all
+          delete :destroy_all
         end
       end
       resources :folders do
