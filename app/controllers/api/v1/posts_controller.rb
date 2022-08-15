@@ -24,7 +24,7 @@ class Api::V1::PostsController < ApplicationController
 
     # meta情報も追加する
     if @post.save && meta.present?
-      title = meta.title
+      title = meta.title || ""
       image = meta.images.best || ""
       MetaInfo.create({post_id:@post.id, image:image, title:title})
 

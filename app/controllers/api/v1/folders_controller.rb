@@ -19,25 +19,35 @@ class Api::V1::FoldersController < ApplicationController
     end
 
     # 中間テーブルid、Post一覧、そのPostのuser情報も必要
+    # 他人の投稿が途中で非公開になった時の処理
     @posts = @folder.folder_post_relations.map do |relation|
-      {
-        id: relation.post.id,
-        comment: relation.post.comment,
-        url: relation.post.url,
-        evaluation: relation.post.evaluation,
-        published: relation.post.published,
-        user_id: relation.post.user_id,
-        created_at: relation.post.created_at,
-        updated_at: relation.post.updated_at,
-        bookmark: {
-          id: relation.id
-        },
-        user: {
-          username: relation.post.user.username
+      if !(current_user.id != relation.post.user_id && relation.post.published == false)
+        {
+          id: relation.post.id,
+          comment: relation.post.comment,
+          url: relation.post.url,
+          evaluation: relation.post.evaluation,
+          published: relation.post.published,
+          user_id: relation.post.user_id,
+          created_at: relation.post.created_at,
+          updated_at: relation.post.updated_at,
+          meta_info: {
+            image: relation.post.meta_info.image,
+            title: relation.post.meta_info.title,
+          },
+          bookmark: {
+            id: relation.id
+          },
+          user: {
+            username: relation.post.user.username
+          }
         }
-      }
+      end
     end
-    # @posts = @folder.folder_post_relations.as_json(include: :post)
+
+    # 配列のnilを取り除く
+    @posts = @posts.compact
+
     render json: {
       data: {
         id: @folder.id,
