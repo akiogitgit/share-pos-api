@@ -49,11 +49,7 @@ class Api::V1::FoldersController < ApplicationController
     @posts = @posts.compact
 
     render json: {
-      data: {
-        id: @folder.id,
-        name: @folder.name,
-        posts:@posts
-      },
+      data: {data: @posts, message: "successfully get posts"},
       message: "successfully get posts"}, status: 200
   end
 
