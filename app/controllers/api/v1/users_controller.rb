@@ -17,7 +17,7 @@ class Api::V1::UsersController < ApplicationController
 
   # 今後フォロー機能や、他のユーザーの投稿を個別で見る時に使う
   def show
-    posts = @user.posts
+    posts = @user.posts.order(created_at: :desc)
     posts = posts.where(published: true) if @user != current_user
 
     render json: {data: {user: {id:@user.id ,username: @user.username}, posts: posts}, message: "successfully get user"},
