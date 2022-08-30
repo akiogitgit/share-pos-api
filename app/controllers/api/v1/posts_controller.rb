@@ -3,7 +3,7 @@ class Api::V1::PostsController < ApplicationController
   before_action :authenticate, only: %i[create update destroy delete_all]
 
   def index
-    @posts = Post.where(published: true)
+    @posts = Post.where(published: true).order(created_at: :desc)
     render json: {data: @posts, message: "successfully get posts"},
       status: 200
   end

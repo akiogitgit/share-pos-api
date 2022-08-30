@@ -4,7 +4,7 @@ class Api::V1::UsersController < ApplicationController
 
   # ユーザー一覧を表示 (名前だけでいい)
   def index
-    @users = User.all.map do |user|
+    @users = User.all.order(created_at: :desc).map do |user|
       {
         id: user.id,
         username: user.username
