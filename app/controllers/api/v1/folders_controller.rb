@@ -5,7 +5,7 @@ class Api::V1::FoldersController < ApplicationController
   # 自分のフォルダ名一覧
   def index
     # @folders = Folder.all
-    @folders = current_user.folders
+    @folders = current_user.folders.order(:created_at)
     render json: {data: @folders, message: "successfully get folders"},
     status: 200
   end
@@ -20,7 +20,7 @@ class Api::V1::FoldersController < ApplicationController
 
     # 中間テーブルid、Post一覧、そのPostのuser情報も必要
     # 他人の投稿が途中で非公開になった時の処理
-    @posts = @folder.folder_post_relations.map do |relation|
+    @posts = @folder.folder_post_relations.order(created_at: :desc).map do |relation|
       if !(current_user.id != relation.post.user_id && relation.post.published == false)
         {
           id: relation.post.id,
