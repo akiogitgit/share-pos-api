@@ -10,7 +10,7 @@ class Post < ApplicationRecord
   # 全ての返すpostのデータに、user.username, meta_infoを付ける
   def as_json(options={})
     super(
-      include: [user: {only: [:username]}, meta_info: {only: [:image, :title]}]
+      include: [user: {only: [:id, :username]}, meta_info: {only: [:image, :title]}]
     )
   end
 end
