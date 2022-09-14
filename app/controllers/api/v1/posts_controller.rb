@@ -4,6 +4,20 @@ class Api::V1::PostsController < ApplicationController
 
   def index
     @posts = Post.where(published: true).order(created_at: :desc)
+    cookies[:jijijjijijijijijijijijiij] = 1
+    cookies.signed[:s] = "aa"
+    # cookies.encrypted[:angou] = 1
+    cookies[:angou] = {
+      value: 20,
+      expires: "2022-10-1".to_date,
+      secure: true,
+      httponly: true,
+      http_only: true
+    }
+    if cookies[:angou].present?
+      render json: {data:cookies[:angou]}
+      return
+    end
     render json: {data: @posts, message: "successfully get posts"},
       status: 200
   end
