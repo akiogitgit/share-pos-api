@@ -11,8 +11,14 @@ module SharePosApi
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
     # Configuration for the application, engines, and railties goes here.
+    
+    # フロントのCookieをいじる設定
     config.middleware.use ActionDispatch::Cookies
+    # フロントのCookieのSameSite属性をNoneに設定
+    config.action_dispatch.cookies_same_site_protection = :none 
+    # フロントのSessionをいじる設定
     config.middleware.use ActionDispatch::Session::CookieStore
+
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.
     #

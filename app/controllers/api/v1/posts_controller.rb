@@ -4,22 +4,50 @@ class Api::V1::PostsController < ApplicationController
 
   def index
     @posts = Post.where(published: true).order(created_at: :desc)
-    cookies[:jijijjijijijijijijijijiij] = 1
-    cookies.signed[:s] = "aa"
-    # cookies.encrypted[:angou] = 1
-    cookies[:angou] = {
-      value: 20,
-      expires: "2022-10-1".to_date,
-      secure: true,
-      httponly: true,
-      http_only: true
-    }
-    if cookies[:angou].present?
-      render json: {data:cookies[:angou]}
+
+    if cookies[:http_only].nil?
+      render json: {data: "no", message: "successfully get posts"},
+        status: 200
       return
     end
-    render json: {data: @posts, message: "successfully get posts"},
+    
+    # ブラウザのCookieに入っていても、nullに
+  #   render json: {data: cookies[:http_only], message: "successfully get posts"},
+  #   status: 200
+  # return
+
+    # cookies[:normal] = 1
+    # cookies.signed[:signed] = "aa" # 署名付き 暗号化、改ざん不可
+    # cookies.encrypted[:angou] = 1 # 暗号化、改ざん・読み込み不可
+
+    # cookies[:http_only] = {
+    #   value: 2,
+    #   # expires: "2022-10-1".to_date,
+    #   secure: true,
+    #   http_only: true
+    # }
+    user = User.find(cookies[:http_only])
+    posts = user.posts.order(created_at: :desc)
+    posts = posts.where(published: true) if @user != current_user
+
+
+    render json: {data: posts, message: "successfully get posts"},
       status: 200
+    return
+    # if session[:user_name].present?
+    #   render json:{ data:session[:user_name]}
+    #   return
+    # else
+    #   session[:user_name] = "test!!"
+    # end
+    # if cookies[:signed].present?
+    #   render json: {data:cookies.signed[:signed]}
+    #   return
+    # end
+    # render json: {data: @posts, message: "successfully get posts"},
+    #   status: 200
+      render json: {data: @posts, message: "successfully get posts"},
+        status: 200
   end
 
   def show
@@ -35,6 +63,18 @@ class Api::V1::PostsController < ApplicationController
   def create
     @post = Post.new(post_params)
     meta = MetaInspector.new(@post.url)
+    
+    # secure: true じゃないと、セット出来ない
+    # cookies[:normal] = 1
+    # cookies.signed[:signed] = "aa" # 署名付き 暗号化、改ざん不可
+    # cookies.encrypted[:angou] = 1 # 暗号化、改ざん・読み込み不可
+
+    cookies[:http_only] = {
+      value: 2,
+      # expires: "2022-10-1".to_date,
+      secure: true,
+      http_only: true
+    }
 
     # meta情報も追加する
     if @post.save && meta.present?
