@@ -1,14 +1,19 @@
 class Api::V1::AuthController < ApplicationController
 
+
+
+
+  # logout アクションを作る
+
+
   def sign_up
     @user = User.new(user_params)
 
     if @user.save
-      encrypted = crypt.encrypt_and_sign(@user.id)
-      cookies[:user_id] = {
-        value: encrypted,
+      cookies.encrypted[:user_id] = {
+        value: user.id,
         secure: true,
-        expires: 1.minute.from_now,
+        expires: 3.minute.from_now,
         http_only: true
       }
 
@@ -24,11 +29,10 @@ class Api::V1::AuthController < ApplicationController
     user = User.find_by(email: params[:email])
     
     if user&.authenticate(params[:password])
-      encrypted = crypt.encrypt_and_sign(user.id)
-      cookies[:user_id] = {
-        value: encrypted,
+      cookies.encrypted[:user_id] = {
+        value: user.id,
         secure: true,
-        expires: 1.minute.from_now,
+        expires: 3.minute.from_now,
         http_only: true
       }
 
@@ -43,6 +47,10 @@ class Api::V1::AuthController < ApplicationController
         status: 400
       end
     end
+  end
+
+  def logout
+
   end
 
   private
