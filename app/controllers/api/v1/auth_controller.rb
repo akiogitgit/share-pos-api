@@ -14,7 +14,16 @@ class Api::V1::AuthController < ApplicationController
 
   def login
     user = User.find_by(email: params[:email])
+    
     if user&.authenticate(params[:password])
+      encrypted = crypt.encrypt_and_sign(user.id)
+      cookies[:user_id] = {
+        value: encrypted,
+        secure: true,
+        expires: 1.minute.from_now,
+        http_only: true
+      }
+
       render json: {data: user, message: "successfully login"},
       status: 200
     else
