@@ -4,6 +4,14 @@ class Api::V1::AuthController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
+      encrypted = crypt.encrypt_and_sign(@user.id)
+      cookies[:user_id] = {
+        value: encrypted,
+        secure: true,
+        expires: 1.minute.from_now,
+        http_only: true
+      }
+
       render json: {data: @user, message: "successfully create user"},
       status: 200
     else
