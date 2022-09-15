@@ -1,10 +1,5 @@
 class Api::V1::AuthController < ApplicationController
-
-
-
-
-  # logout アクションを作る
-
+  before_action :authenticate, only: %i[logout]
 
   def sign_up
     @user = User.new(user_params)
@@ -50,7 +45,14 @@ class Api::V1::AuthController < ApplicationController
   end
 
   def logout
-
+    cookies.encrypted[:user_id] = {
+      value: nil,
+      secure: true,
+      expires: 1.second.from_now,
+      http_only: true
+    }
+    render json: {message: "successfully logout"},
+    status: 200
   end
 
   private
