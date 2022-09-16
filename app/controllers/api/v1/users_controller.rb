@@ -1,9 +1,15 @@
 class Api::V1::UsersController < ApplicationController
-  before_action :authenticate_user!#, only: %i[show update destroy]
   before_action :set_user, only: %i[show]
+  before_action :authenticate
+
   # ユーザー一覧を表示 (名前だけでいい)
   def index
-    @users = User.pluck(:username)
+    @users = User.all.order(created_at: :desc).map do |user|
+      {
+        id: user.id,
+        username: user.username
+      }
+    end
 
     render json: {data: @users, message: "successfully get users"},
       status: 200
@@ -11,51 +17,49 @@ class Api::V1::UsersController < ApplicationController
 
   # 今後フォロー機能や、他のユーザーの投稿を個別で見る時に使う
   def show
-    posts = @user.posts
+    posts = @user.posts.order(created_at: :desc)
     posts = posts.where(published: true) if @user != current_user
 
-    render json: {data: {user: @user.username, posts: posts}, message: "successfully get user"},
+    render json: {data: {user: {id:@user.id ,username: @user.username}, posts: posts}, message: "successfully get user"},
       status: 200
   end
 
-  # POST /users
-  # def create
-  #   @user = User.new(user_params)
+  # users/ PUT
+  def update
+    if current_user.update(user_params)
+      render json: {data: current_user, message: "successfully update user"},
+        status: 200
+    else
+      render json: {message: current_user.errors.full_messages},
+        status: 400
+    end
+  end
 
-  #   if @user.save
-  #     render json: @user, status: :created, location: @user
-  #   else
-  #     render json: @user.errors.full_messages # こっちの方が教えてくれる
-  #   end
-  # end
+  # users/ DELETE
+  # usernameを「退会済みユーザー」にする
+  def delete
+    if current_user.destroy
+      render json: {data: current_user, message: "successfully delete user"},
+        status: 200
+    else
+      render json: {message: current_user.errors.full_messages},
+        status: 400
+    end
+  end
 
-  # delete はそのまま v1/authでいけそう
-  # update は registration_controller みたいのでカスタム出来ないかな？
-  # PATCH/PUT /users/1
-  # def update
-  #   if current_user.update(user_params)
-  #     render json: current_user
-  #   else
-  #     render json: current_user.errors, status: :unprocessable_entity
-  #   end
-  # end
-
-  # DELETE /users/1
-  # def destroy
-  #   if current_user.destroy
-  #     render json: {message: "ユーザーを削除しました。"}
-  #   else
-  #     render json: {error: "ユーザーを削除に失敗しました。"}
-  #   end
-  # end
+  def me
+    render json: {data: current_user, message: "successfully get user"},
+      status: 200
+  end
 
   private
 
-    # Only allow a list of trusted parameters through.
     def set_user
       @user = User.find(params[:id])
     end
-    # def user_params
-    #   params.require(:user).permit(:email, :username, :nickname, :password, :password_confirmation)
-    # end
+
+    # passwordの変更はさせない
+    def user_params
+      params.permit(:username, :email)
+    end
 end

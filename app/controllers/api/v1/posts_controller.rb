@@ -1,18 +1,16 @@
 class Api::V1::PostsController < ApplicationController
   before_action :set_post, only: %i[ show update destroy ]
-  before_action :authenticate_user!, only: %i[create update destroy destroy_all]
+  before_action :authenticate, only: %i[create update destroy delete_all]
 
-  # GET /posts
   def index
-    @posts = Post.all.where(published: true)#.as_json(include: [user: { only: [:username] }])
+    @posts = Post.where(published: true).order(created_at: :desc)
     render json: {data: @posts, message: "successfully get posts"},
       status: 200
   end
 
-  # GET /posts/1
   def show
     # published: trueのみ表示
-    if @post.published == true || @post.user_id == current_user.id
+    if @post.published == true || current_user && @post.user_id == current_user.id
       render json: {data: @post, message: "successfully get post"},
         status: 200
     else
@@ -20,20 +18,25 @@ class Api::V1::PostsController < ApplicationController
     end
   end
 
-  # POST /posts
   def create
     @post = Post.new(post_params)
+    meta = MetaInspector.new(@post.url)
 
-    if @post.save
-      render json: {data: @post, message: "successfully create post"},
+    # meta情報も追加する
+    if @post.save && meta.present?
+      title = meta.title || ""
+      image = meta.images.best || ""
+      MetaInfo.create({post_id:@post.id, image:image, title:title})
+
+      render json: {data: @post, message: "successfully create post and meta_info"},
         status: 200
     else
       render json: {message: @post.errors.full_messages},
         status: 400
+      return
     end
   end
 
-  # PATCH/PUT /posts/1
   def update
     if @post.user_id != current_user.id
       render json: {message: "更新する権限がありません。"},
@@ -50,7 +53,6 @@ class Api::V1::PostsController < ApplicationController
     end
   end
 
-  # DELETE /posts/1
   def destroy
     if @post.user_id != current_user.id
       render json: {message: "削除する権限がありません。"},

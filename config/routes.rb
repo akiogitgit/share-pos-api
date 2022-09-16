@@ -1,11 +1,25 @@
 Rails.application.routes.draw do
   # これないと、devise_token_authのメソッド使えない
-  mount_devise_token_auth_for 'User', at: 'auth'
+  # mount_devise_token_auth_for 'User', at: 'auth'
   
   namespace :api do
     namespace :v1 do
-      mount_devise_token_auth_for "User", at: "auth"
-      resources :users, only: %i[index show]
+      # mount_devise_token_auth_for "User", at: "auth"
+      resources :auth, only: %i[] do
+        collection do
+          post :login
+          post :sign_up
+        end
+      end
+      resources :users, only: %i[index show] do
+        collection do
+          get :me
+        end
+      end
+      put "users", to: "users#update" # idを受け取らない
+      patch "users", to: "users#update"
+      delete "users", to: "users#delete"
+      
       resources :posts do
         collection do
           delete :destroy_all
