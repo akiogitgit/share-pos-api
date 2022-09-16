@@ -16,8 +16,13 @@ class ApplicationController < ActionController::API
         cookies.encrypted[:token] = {
           value: nil,
           secure: true,
-          expires: 1.second.from_now,
+          expires: 0.second.from_now,
           http_only: true
+        }
+        cookies[:user_info] = {
+          value: nil,
+          secure: true,
+          expires: 0.second.from_now,
         }
         return
       end
