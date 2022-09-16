@@ -8,7 +8,7 @@ class Api::V1::AuthController < ApplicationController
       cookies.encrypted[:token] = {
         value: user.token,
         secure: true,
-        expires: 3.minute.from_now,
+        expires: 2.weeks.from_now,
         http_only: true
       }
 
@@ -27,7 +27,7 @@ class Api::V1::AuthController < ApplicationController
       cookies.encrypted[:token] = {
         value: user.token,
         secure: true,
-        expires: 3.minute.from_now,
+        expires: 2.weeks.from_now,
         http_only: true
       }
 
