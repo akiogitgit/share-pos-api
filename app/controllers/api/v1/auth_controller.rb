@@ -1,9 +1,17 @@
 class Api::V1::AuthController < ApplicationController
+  before_action :authenticate, only: %i[logout]
 
   def sign_up
     @user = User.new(user_params)
 
     if @user.save
+      cookies.encrypted[:token] = {
+        value: user.token,
+        secure: true,
+        expires: 2.weeks.from_now,
+        http_only: true
+      }
+
       render json: {data: @user, message: "successfully create user"},
       status: 200
     else
@@ -14,7 +22,15 @@ class Api::V1::AuthController < ApplicationController
 
   def login
     user = User.find_by(email: params[:email])
+    
     if user&.authenticate(params[:password])
+      cookies.encrypted[:token] = {
+        value: user.token,
+        secure: true,
+        expires: 2.weeks.from_now,
+        http_only: true
+      }
+
       render json: {data: user, message: "successfully login"},
       status: 200
     else
@@ -26,6 +42,17 @@ class Api::V1::AuthController < ApplicationController
         status: 400
       end
     end
+  end
+
+  def logout
+    cookies.encrypted[:token] = {
+      value: nil,
+      secure: true,
+      expires: 0.second.from_now,
+      http_only: true
+    }
+    render json: {message: "successfully logout"},
+    status: 200
   end
 
   private

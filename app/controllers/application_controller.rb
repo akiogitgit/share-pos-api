@@ -1,12 +1,28 @@
 class ApplicationController < ActionController::API
   include ActionController::HttpAuthentication::Token::ControllerMethods
   include ActionController::HttpAuthentication::Basic::ControllerMethods
+  include ActionController::Cookies
   
   protected
     def current_user
-      authenticate_with_http_token do |token, options|
-        auth_user = User.find_by(token: token)
+      if cookies[:token].nil?
+        return
       end
+
+      token = cookies.encrypted[:token]
+
+      # デコード失敗したらcookieを消す
+      if token.nil?
+        cookies.encrypted[:token] = {
+          value: nil,
+          secure: true,
+          expires: 0.second.from_now,
+          http_only: true
+        }
+        return
+      end
+
+      User.find_by(token: token)
     end
     
     def authenticate

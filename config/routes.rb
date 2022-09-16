@@ -8,6 +8,7 @@ Rails.application.routes.draw do
       resources :auth, only: %i[] do
         collection do
           post :login
+          delete :logout
           post :sign_up
         end
       end

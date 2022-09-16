@@ -1,6 +1,6 @@
 class Api::V1::UsersController < ApplicationController
   before_action :set_user, only: %i[show]
-  before_action :authenticate
+  before_action :authenticate, only: %i[index update delete me]
 
   # ユーザー一覧を表示 (名前だけでいい)
   def index
@@ -37,6 +37,7 @@ class Api::V1::UsersController < ApplicationController
 
   # users/ DELETE
   # usernameを「退会済みユーザー」にする
+  # destroyに変更
   def delete
     if current_user.destroy
       render json: {data: current_user, message: "successfully delete user"},
