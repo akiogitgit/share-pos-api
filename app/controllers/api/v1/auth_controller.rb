@@ -5,8 +5,8 @@ class Api::V1::AuthController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
-      cookies.encrypted[:user_id] = {
-        value: user.id,
+      cookies.encrypted[:token] = {
+        value: user.token,
         secure: true,
         expires: 3.minute.from_now,
         http_only: true
@@ -24,8 +24,8 @@ class Api::V1::AuthController < ApplicationController
     user = User.find_by(email: params[:email])
     
     if user&.authenticate(params[:password])
-      cookies.encrypted[:user_id] = {
-        value: user.id,
+      cookies.encrypted[:token] = {
+        value: user.token,
         secure: true,
         expires: 3.minute.from_now,
         http_only: true
@@ -45,7 +45,7 @@ class Api::V1::AuthController < ApplicationController
   end
 
   def logout
-    cookies.encrypted[:user_id] = {
+    cookies.encrypted[:token] = {
       value: nil,
       secure: true,
       expires: 1.second.from_now,

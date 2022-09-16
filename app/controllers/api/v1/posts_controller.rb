@@ -5,12 +5,6 @@ class Api::V1::PostsController < ApplicationController
   def index
     @posts = Post.where(published: true).order(created_at: :desc)
 
-    if current_user.present?
-      render json: {data: current_user, message: "successfully get posts"},
-        status: 200
-      return
-    end
-
     render json: {data: @posts, message: "successfully get posts"},
       status: 200
   end
@@ -28,22 +22,7 @@ class Api::V1::PostsController < ApplicationController
   def create
     @post = Post.new(post_params)
     meta = MetaInspector.new(@post.url)
-
-    encrypted = crypt.encrypt_and_sign('Qiitaきーたキータ')
     
-    # secure: true じゃないと、セット出来ない
-    cookies[:abc] = {
-      value: encrypted,
-      secure: true,
-      http_only: true
-    }
-    cookies[:http_only] = {
-      value: 2,
-      # expires: "2022-10-1".to_date,
-      secure: true,
-      http_only: true
-    }
-
     # meta情報も追加する
     if @post.save && meta.present?
       title = meta.title || ""

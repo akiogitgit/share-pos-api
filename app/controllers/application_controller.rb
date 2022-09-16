@@ -5,15 +5,15 @@ class ApplicationController < ActionController::API
   
   protected
     def current_user
-      if cookies[:user_id].nil?
+      if cookies[:token].nil?
         return
       end
 
-      user_id = cookies.encrypted[:user_id]
+      token = cookies.encrypted[:token]
 
       # デコード失敗したらcookieを消す
-      if user_id.nil?
-        cookies.encrypted[:user_id] = {
+      if token.nil?
+        cookies.encrypted[:token] = {
           value: nil,
           secure: true,
           expires: 1.second.from_now,
@@ -22,7 +22,7 @@ class ApplicationController < ActionController::API
         return
       end
 
-      User.find(user_id)
+      User.find_by(token: token)
     end
     
     def authenticate
