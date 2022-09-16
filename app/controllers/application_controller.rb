@@ -19,11 +19,6 @@ class ApplicationController < ActionController::API
           expires: 0.second.from_now,
           http_only: true
         }
-        cookies[:user_info] = {
-          value: nil,
-          secure: true,
-          expires: 0.second.from_now,
-        }
         return
       end
 

@@ -11,11 +11,6 @@ class Api::V1::AuthController < ApplicationController
         expires: 3.minute.from_now,
         http_only: true
       }
-      cookies[:user_info] = {
-        value: {id: user.id, username: user.username},
-        secure: true,
-        expires: 3.minute.from_now,
-      }
 
       render json: {data: @user, message: "successfully create user"},
       status: 200
@@ -34,11 +29,6 @@ class Api::V1::AuthController < ApplicationController
         secure: true,
         expires: 3.minute.from_now,
         http_only: true
-      }
-      cookies[:user_info] = {
-        value: {id: user.id, username: user.username},
-        secure: true,
-        expires: 3.minute.from_now,
       }
 
       render json: {data: user, message: "successfully login"},
@@ -60,11 +50,6 @@ class Api::V1::AuthController < ApplicationController
       secure: true,
       expires: 0.second.from_now,
       http_only: true
-    }
-    cookies[:user_info] = {
-      value: nil,
-      secure: true,
-      expires: 0.second.from_now,
     }
     render json: {message: "successfully logout"},
     status: 200
