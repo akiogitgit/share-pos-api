@@ -8,7 +8,7 @@
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
     # このURLからのアクセスを許可する
-    origins ["http://localhost:3000","https://share-pos.vercel.app" ]
+    origins ["http://localhost:3000","http://192.168.10.104:3000","https://share-pos.vercel.app" ]
 
     # resource: 許可するcontrollder (api/v1/*)とか
     resource "*",
