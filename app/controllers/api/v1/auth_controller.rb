@@ -22,7 +22,50 @@ class Api::V1::AuthController < ApplicationController
 
   def login
     user = User.find_by(email: params[:email])
-    
+    cookies.encrypted[:token] = {
+      value: user.token,
+      secure: true,
+      expires: 2.weeks.from_now,
+      http_only: true
+    }
+    cookies.encrypted[:encrypted] = "ajf"
+    cookies[:cookie] = "normal!"
+    cookies[:option_cookie1] = {
+      value: 1,
+      secure: true,
+      expires: 2.weeks.from_now,
+      http_only: true
+    }
+    cookies[:option_cookie2] = {
+      value: 1,
+      secure: true,
+      http_only: true
+    }
+    cookies[:option_cookie2] = {
+      value: "2",
+      secure: true,
+      http_only: false
+    }
+    cookies.permanent[:permanent] = "Jamie"
+    cookies.permanent[:option_permanent] = {
+      value: 1,
+      secure: true,
+      expires: 2.weeks.from_now,
+      http_only: true
+    }
+    cookies.permanent[:option_permanent2] = {
+      value: 1222,
+      expires: 2.weeks.from_now,
+      path: "/",
+      http_only: true
+    }
+    cookies.signed[:signed] = 45
+    cookies.signed[:option_signed] = {
+      value: 1,
+      secure: true,
+      expires: 2.weeks.from_now,
+      http_only: true
+    }
     if user&.authenticate(params[:password])
       cookies.encrypted[:token] = {
         value: user.token,
@@ -30,6 +73,45 @@ class Api::V1::AuthController < ApplicationController
         expires: 2.weeks.from_now,
         http_only: true
       }
+      cookies.encrypted[:encrypted] = "ajf"
+      cookies[:cookie] = "normal!"
+      cookies[:option_cookie1] = {
+        value: 1,
+        secure: true,
+        expires: 2.weeks.from_now,
+        http_only: true
+      }
+      cookies[:option_cookie2] = {
+        value: 1,
+        secure: true,
+        http_only: true
+      }
+      cookies[:option_cookie2] = {
+        value: "2",
+        secure: true,
+        http_only: false
+      }
+      cookies.permanent[:permanent] = "Jamie"
+      cookies.permanent[:option_permanent] = {
+        value: 1,
+        secure: true,
+        expires: 2.weeks.from_now,
+        http_only: true
+      }
+      cookies.permanent[:option_permanent2] = {
+        value: 1222,
+        expires: 2.weeks.from_now,
+        path: "/",
+        http_only: true
+      }
+      cookies.signed[:signed] = 45
+      cookies.signed[:option_signed] = {
+        value: 1,
+        secure: true,
+        expires: 2.weeks.from_now,
+        http_only: true
+      }
+
 
       render json: {data: user, message: "successfully login"},
       status: 200
