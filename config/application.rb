@@ -17,7 +17,7 @@ module SharePosApi
     # フロントのCookieのSameSite属性をNoneに設定
     config.action_dispatch.cookies_same_site_protection = :none 
     # フロントのSessionをいじる設定
-    config.middleware.use ActionDispatch::Session::CookieStore
+    # config.middleware.use ActionDispatch::Session::CookieStore
 
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.

@@ -44,6 +44,7 @@ gem "bootsnap", require: false
 # gem 'devise_token_auth', '>= 1.2.0', git: "https://github.com/lynndylanhurley/devise_token_auth"
 gem "rack-cors"
 gem 'metainspector'
+gem "rails_same_site_cookie", "~> 0.1.8"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

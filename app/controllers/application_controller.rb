@@ -13,7 +13,13 @@ class ApplicationController < ActionController::API
 
       # デコード失敗したらcookieを消す
       if token.nil?
-        cookies.encrypted[:token] = {
+        # cookies.encrypted[:token] = {
+        #   value: nil,
+        #   secure: true,
+        #   expires: 0.second.from_now,
+        #   http_only: true
+        # }
+        cookies[:token] = {
           value: nil,
           secure: true,
           expires: 0.second.from_now,
