@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       # mount_devise_token_auth_for "User", at: "auth"
-      resources :auth, only: %i[] do
+      resources :auth do
         collection do
           post :login
           delete :logout
@@ -19,7 +19,7 @@ Rails.application.routes.draw do
       end
       put "users", to: "users#update" # idを受け取らない
       patch "users", to: "users#update"
-      delete "users", to: "users#delete"
+      delete "users", to: "users#destroy"
       
       resources :posts do
         collection do
