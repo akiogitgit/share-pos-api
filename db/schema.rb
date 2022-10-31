@@ -11,9 +11,12 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.0].define(version: 2022_08_10_054326) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "folder_post_relations", force: :cascade do |t|
-    t.integer "folder_id", null: false
-    t.integer "post_id", null: false
+    t.bigint "folder_id", null: false
+    t.bigint "post_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["folder_id"], name: "index_folder_post_relations_on_folder_id"
@@ -21,7 +24,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_10_054326) do
   end
 
   create_table "folders", force: :cascade do |t|
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -29,7 +32,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_10_054326) do
   end
 
   create_table "meta_infos", force: :cascade do |t|
-    t.integer "post_id", null: false
+    t.bigint "post_id", null: false
     t.string "image"
     t.string "title"
     t.datetime "created_at", null: false
@@ -42,7 +45,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_10_054326) do
     t.string "url", null: false
     t.boolean "published", default: false
     t.integer "evaluation", default: 1
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_posts_on_user_id"
