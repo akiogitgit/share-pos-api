@@ -1,6 +1,6 @@
 class Api::V1::UsersController < ApplicationController
   before_action :set_user, only: %i[show]
-  before_action :authenticate
+  before_action :authenticate, only: %i[index update destroy me]
 
   # ユーザー一覧を表示 (名前だけでいい)
   def index
@@ -27,7 +27,7 @@ class Api::V1::UsersController < ApplicationController
   # users/ PUT
   def update
     if current_user.update(user_params)
-      render json: {data: current_user, message: "successfully update user"},
+      render json: {data: non_sensitive_user(current_user), message: "successfully update user"},
         status: 200
     else
       render json: {message: current_user.errors.full_messages},
@@ -37,9 +37,10 @@ class Api::V1::UsersController < ApplicationController
 
   # users/ DELETE
   # usernameを「退会済みユーザー」にする
-  def delete
+  # destroyに変更
+  def destroy
     if current_user.destroy
-      render json: {data: current_user, message: "successfully delete user"},
+      render json: {data: non_sensitive_user(current_user), message: "successfully delete user"},
         status: 200
     else
       render json: {message: current_user.errors.full_messages},
@@ -48,7 +49,7 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def me
-    render json: {data: current_user, message: "successfully get user"},
+    render json: {data: non_sensitive_user(current_user), message: "successfully get user"},
       status: 200
   end
 
@@ -61,5 +62,16 @@ class Api::V1::UsersController < ApplicationController
     # passwordの変更はさせない
     def user_params
       params.permit(:username, :email)
+    end
+
+    # token, password を抜いたユーザー
+    def non_sensitive_user(user)
+      {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        created_at: user.created_at,
+        updated_at: user.updated_at
+      }
     end
 end

@@ -1,4 +1,5 @@
 class Api::V1::AuthController < ApplicationController
+  before_action :authenticate, only: %i[logout]
 
   def sign_up
     @user = User.new(user_params)
@@ -14,6 +15,7 @@ class Api::V1::AuthController < ApplicationController
 
   def login
     user = User.find_by(email: params[:email])
+
     if user&.authenticate(params[:password])
       render json: {data: user, message: "successfully login"},
       status: 200
@@ -26,6 +28,12 @@ class Api::V1::AuthController < ApplicationController
         status: 400
       end
     end
+  end
+
+  # 今は使わない
+  def logout
+    render json: {message: "error"},
+    status: 404
   end
 
   private

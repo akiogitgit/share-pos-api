@@ -4,6 +4,7 @@ class Api::V1::PostsController < ApplicationController
 
   def index
     @posts = Post.where(published: true).order(created_at: :desc)
+
     render json: {data: @posts, message: "successfully get posts"},
       status: 200
   end
@@ -21,7 +22,7 @@ class Api::V1::PostsController < ApplicationController
   def create
     @post = Post.new(post_params)
     meta = MetaInspector.new(@post.url)
-
+    
     # meta情報も追加する
     if @post.save && meta.present?
       title = meta.title || ""
