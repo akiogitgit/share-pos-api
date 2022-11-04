@@ -230,12 +230,12 @@ DEPENDENCIES
   bootsnap
   debug
   metainspector
-  pg
+  pg (~> 1.4)
   puma (~> 5.0)
   rack-cors
   rails (~> 7.0.3)
   rails_same_site_cookie (~> 0.1.8)
-  sqlite3
+  sqlite3 (~> 1.4)
   tzinfo-data
 
 RUBY VERSION
