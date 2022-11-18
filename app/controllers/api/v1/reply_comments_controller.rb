@@ -1,5 +1,5 @@
 class Api::V1::ReplyCommentsController < ApplicationController
-  before_action :set_reply_comment, only: %i[ show update destroy ]
+  before_action :set_reply_comment, only: %i[update destroy]
   before_action :authenticate, only: %i[create update destroy]
 
   def create
@@ -14,8 +14,13 @@ class Api::V1::ReplyCommentsController < ApplicationController
     end
   end
 
-  # update, delete を自分のコメントだけ許可する
   def update
+    if @reply_comment.user_id != current_user.id
+      render json: {message: "更新する権限がありません。"},
+        status: 403
+      return
+    end
+
     if @reply_comment.update(reply_comment_params)
       render json: {data: @reply_comment, message: "successfully update comment"},
       status: 200
@@ -26,6 +31,12 @@ class Api::V1::ReplyCommentsController < ApplicationController
   end
 
   def destroy
+    if @reply_comment.user_id != current_user.id
+      render json: {message: "更新する権限がありません。"},
+        status: 403
+      return
+    end
+
     if @reply_comment.destroy
       render json: {data: @reply_comment, message: "コメントを削除しました。"},
         status: 200
