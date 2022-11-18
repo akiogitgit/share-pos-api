@@ -33,6 +33,7 @@ Rails.application.routes.draw do
         end
       end
       resources :metas, only: %i[index]
+      resources :reply_comments
     end
 end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
