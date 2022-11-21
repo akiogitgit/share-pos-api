@@ -21,36 +21,7 @@ class Api::V1::FolderPostRelationsController < ApplicationController
     end
 
     if @bookmark.save
-      # 欲しいのは folder.id, post情報(usernameも含む)
-      # @post = {
-      #   post: @bookmark.post,
-      #   bookmark: {
-      #     id: @bookmark.id
-      #   },
-      #   folder: {
-      #     id: @bookmark.folder_id
-      #   }
-      # }
-      @post = {
-        id: @bookmark.post.id,
-        comment: @bookmark.post.comment,
-        url: @bookmark.post.url,
-        evaluation: @bookmark.post.evaluation,
-        published: @bookmark.post.published,
-        user_id: @bookmark.post.user_id,
-        created_at: @bookmark.post.created_at,
-        updated_at: @bookmark.post.updated_at,
-        user: {
-          username: @bookmark.post.user.username
-        },
-        bookmark: {
-          id: @bookmark.id
-        },
-        folder: {
-          id: @bookmark.folder_id
-        }
-      }
-      render json: {data: @post, message: "successfully added post to folder"},
+      render json: {data: @bookmark.post, message: "successfully added post to folder"},
         status: 200
     else
       render json: {message: @bookmark.errors.full_messages},
