@@ -18,10 +18,42 @@ class Api::V1::FoldersController < ApplicationController
       return
     end
 
-    @posts = []
-    @folder.folder_post_relations.order(created_at: :desc).each do |relation|
-      post = Post.find(relation.post.id)
-      @posts.push(post)
+    # これだとpost毎のbookmark.idが入らない
+    # @posts = []
+    # @folder.folder_post_relations.order(created_at: :desc).each do |relation|
+    #   post = Post.find(relation.post.id)
+    #   @posts.push(post)
+    # end
+
+    # 中間テーブルid、Post一覧、そのPostのuser情報も必要
+    # 他人の投稿が途中で非公開になった時の処理
+    @posts = @folder.folder_post_relations.order(created_at: :desc).map do |relation|
+      post = relation.post
+      if !(current_user.id != post.user_id && post.published == false)
+        {
+          id: post.id,
+          comment: post.comment,
+          url: post.url,
+          evaluation: post.evaluation,
+          published: post.published,
+          user_id: post.user_id,
+          created_at: post.created_at,
+          updated_at: post.updated_at,
+
+          bookmark: {
+            id: relation.id
+          },
+          meta_info: {
+            image: post.meta_info.image,
+            title: post.meta_info.title,
+          },
+          user: {
+            id: post.user.id,
+            username: post.user.username,
+          },
+          reply_comments: post.reply_comments
+        }
+      end
     end
 
     # 配列のnilを取り除く
