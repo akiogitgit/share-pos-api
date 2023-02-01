@@ -7,7 +7,6 @@ class Api::V1::PostsController < ApplicationController
   def index
     # 1ページあたり24返すページネーション
     @posts = Post.where(published: true).order(created_at: :desc).page(params[:page]).per(params[:per])
-
     render json: {data: @posts, message: "successfully get posts"},
       status: 200
   end
