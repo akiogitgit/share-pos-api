@@ -2,8 +2,11 @@ class Api::V1::PostsController < ApplicationController
   before_action :set_post, only: %i[ show update destroy ]
   before_action :authenticate, only: %i[create update destroy delete_all]
 
+  include Pagination
+
   def index
-    @posts = Post.where(published: true).order(created_at: :desc)
+    # 1ページあたり24返すページネーション
+    @posts = Post.where(published: true).order(created_at: :desc).page(params[:page]).per(params[:per])
 
     render json: {data: @posts, message: "successfully get posts"},
       status: 200
