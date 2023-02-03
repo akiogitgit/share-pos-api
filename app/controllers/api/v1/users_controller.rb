@@ -15,13 +15,22 @@ class Api::V1::UsersController < ApplicationController
       status: 200
   end
 
-  # 今後フォロー機能や、他のユーザーの投稿を個別で見る時に使う
   def show
     posts = @user.posts.order(created_at: :desc)
     posts = posts.where(published: true) if @user != current_user
 
-    render json: {data: {user: {id:@user.id ,username: @user.username}, posts: posts}, message: "successfully get user"},
-      status: 200
+    # フォローしているか、フォロワー数、フォロー数も返す
+    user_info = {id:@user.id ,username: @user.username}
+    is_followed = current_user.present? ? current_user.following?(@user) : false
+    render json: {data: {
+        user: user_info,
+        posts: posts,
+        is_followed: is_followed,
+        following_count: @user.followings.count,
+        follower_count: @user.followers.count
+      },
+      message: "successfully get user"},
+    status: 200
   end
 
   # users/ PUT
