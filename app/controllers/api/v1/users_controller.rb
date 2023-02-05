@@ -21,11 +21,12 @@ class Api::V1::UsersController < ApplicationController
 
     # フォローしているか、フォロワー数、フォロー数も返す
     user_info = {id:@user.id ,username: @user.username}
-    is_followed = current_user.present? ? current_user.following?(@user) : false
-    render json: {data: {
+    is_following = current_user.present? ? current_user.following?(@user) : false
+    render json: {data: 
+      {
         user: user_info,
         posts: posts,
-        is_followed: is_followed,
+        is_following: is_following,
         following_count: @user.followings.count,
         follower_count: @user.followers.count
       },

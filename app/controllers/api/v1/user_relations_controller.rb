@@ -42,11 +42,11 @@ class Api::V1::UserRelationsController < ApplicationController
 
   # フォロウィング一覧
   def followings
-    @followings = @user.followings.map do |user|
+    @followings = @user.followings.order(created_at: :desc).map do |user|
       {
         id: user.id,
         username: user.username,
-        is_followed: current_user.present? ? current_user.following?(user) : false
+        is_following: current_user.present? ? current_user.following?(user) : false
       }
     end
     render json: {data: @followings, message: "successfully get followings"},
@@ -55,11 +55,11 @@ class Api::V1::UserRelationsController < ApplicationController
 
   # フォロワー一覧
   def followers
-    @followers = @user.followers.map do |user|
+    @followers = @user.followers.order(created_at: :desc).map do |user|
       {
         id: user.id,
         username: user.username,
-        is_followed: current_user.present? ? current_user.following?(user) : false
+        is_following: current_user.present? ? current_user.following?(user) : false
       }
     end
     render json: {data: @followers, message: "successfully get followers"},
