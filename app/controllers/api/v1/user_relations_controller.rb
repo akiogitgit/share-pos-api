@@ -1,6 +1,6 @@
 class Api::V1::UserRelationsController < ApplicationController
   before_action :set_user
-  before_action :authenticate
+  before_action :authenticate, only: %i[create destroy]
 
   # フォローする
   def create
@@ -42,11 +42,11 @@ class Api::V1::UserRelationsController < ApplicationController
 
   # フォロウィング一覧
   def followings
-    @followings = @user.followings.map do |user|
+    @followings = @user.followings.reverse.map do |user|
       {
         id: user.id,
         username: user.username,
-        is_followed: current_user.present? ? current_user.following?(user) : false
+        is_following: current_user.present? ? current_user.following?(user) : false
       }
     end
     render json: {data: @followings, message: "successfully get followings"},
@@ -55,11 +55,11 @@ class Api::V1::UserRelationsController < ApplicationController
 
   # フォロワー一覧
   def followers
-    @followers = @user.followers.map do |user|
+    @followers = @user.followers.reverse.map do |user|
       {
         id: user.id,
         username: user.username,
-        is_followed: current_user.present? ? current_user.following?(user) : false
+        is_following: current_user.present? ? current_user.following?(user) : false
       }
     end
     render json: {data: @followers, message: "successfully get followers"},
